@@ -10,7 +10,10 @@
       "Bash(Write-Host \"Directories created\")",
       "Bash(gh pr create --title '[미션 1] 수박게임 메인 메커닉 구현 \\(구성부분\\)' --base main --head '1-WatermelonGame-\\(구성부분\\)' --body ' *)",
       "Bash(gh api *)",
-      "Bash(gh pr *)"
+      "Bash(gh pr *)",
+      "Bash(ls /c/Users/kimseongsoo/ 2>&1)",
+      "mcp__GitHub__issue_read",
+      "mcp__GitHub__create_pull_request"
     ]
   }
 }
