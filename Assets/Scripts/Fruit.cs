@@ -68,7 +68,7 @@ public class Fruit : MonoBehaviour
         sr.color  = Colors[index];
         sr.sortingOrder = 1;
 
-        rb.isKinematic   = true;
+        rb.bodyType      = RigidbodyType2D.Kinematic;
         rb.gravityScale  = 1f;
         rb.mass          = r * r * 2f;
         rb.linearDamping = 0.2f;
@@ -77,7 +77,7 @@ public class Fruit : MonoBehaviour
 
     public void Drop()
     {
-        rb.isKinematic = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
         isDropped      = true;
     }
 
