@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// 게임 상태(점수·게임오버) 관리 및 씬에 배치된 환경 오브젝트에 스프라이트 적용.
-/// 씬 오브젝트 생성은 하지 않고, GameObject.Find 로 미리 배치된 오브젝트를 찾아 처리.
+/// 게임 상태(점수·게임오버) 관리 및 씬 오브젝트 시각화.
+/// UI 오브젝트는 씬에 미리 배치하고 SerializeField로 참조.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -16,11 +16,13 @@ public class GameManager : MonoBehaviour
     public const float GameOverLineY  = 6.5f;
     public const float SpawnerY       = 8.5f;
 
+    // ─── 씬 UI 참조 (Inspector에서 연결) ────────────────────────────────────
+    [SerializeField] private Text       scoreText;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private Text       finalScoreLabel;
+
     // ─── 런타임 참조 ─────────────────────────────────────────────────────────
     private FruitSpawner spawner;
-    private Text         scoreText;
-    private GameObject   gameOverPanel;
-    private Text         finalScoreLabel;
     private bool         isGameOver;
     private int          score;
 
@@ -35,10 +37,11 @@ public class GameManager : MonoBehaviour
 
         ApplyVisuals();
         spawner = FindFirstObjectByType<FruitSpawner>();
-        CreateUI();
+
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
     }
 
-    // ─── 환경 오브젝트 시각화 (씬에 미리 배치된 오브젝트에 Sprite를 입힘) ──
+    // ─── 환경 오브젝트 시각화 ────────────────────────────────────────────────
 
     void ApplyVisuals()
     {
@@ -69,98 +72,6 @@ public class GameManager : MonoBehaviour
         return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1);
     }
 
-    // ─── UI 생성 ─────────────────────────────────────────────────────────────
-
-    void CreateUI()
-    {
-        var cv = new GameObject("Canvas");
-        var canvas = cv.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        var scaler = cv.AddComponent<CanvasScaler>();
-        scaler.uiScaleMode         = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1080, 1920);
-        cv.AddComponent<GraphicRaycaster>();
-
-        // EventSystem (버튼 클릭에 필요)
-        var esObj = new GameObject("EventSystem");
-        esObj.AddComponent<UnityEngine.EventSystems.EventSystem>();
-        esObj.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
-
-        // 점수 텍스트
-        scoreText = MakeText(cv.transform, "ScoreText", "Score: 0", 60,
-                             new Color(0.2f, 0.1f, 0f), FontStyle.Bold,
-                             new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
-                             new Vector2(30, -30), new Vector2(500, 90));
-
-        // 게임오버 패널
-        gameOverPanel = new GameObject("GameOverPanel");
-        gameOverPanel.transform.SetParent(cv.transform, false);
-        gameOverPanel.AddComponent<Image>().color = new Color(0, 0, 0, 0.75f);
-        var pRt = gameOverPanel.GetComponent<RectTransform>();
-        pRt.anchorMin = Vector2.zero; pRt.anchorMax = Vector2.one;
-        pRt.sizeDelta = Vector2.zero; pRt.anchoredPosition = Vector2.zero;
-
-        MakeText(gameOverPanel.transform, "Title", "GAME OVER", 100,
-                 Color.white, FontStyle.Bold,
-                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                 new Vector2(0, 80), new Vector2(900, 150));
-
-        finalScoreLabel = MakeText(gameOverPanel.transform, "FinalScore", "Score: 0", 60,
-                 new Color(1f, 0.9f, 0.4f), FontStyle.Bold,
-                 new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                 new Vector2(0, -20), new Vector2(700, 90));
-
-        MakeButton(gameOverPanel.transform, "다시 시작", new Vector2(0, -140),
-                   new Vector2(420, 100), RestartGame);
-
-        gameOverPanel.SetActive(false);
-    }
-
-    // ─── UI 헬퍼 ─────────────────────────────────────────────────────────────
-
-    static Text MakeText(Transform parent, string name, string txt, int size,
-                         Color col, FontStyle style,
-                         Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot,
-                         Vector2 pos, Vector2 sizeDelta)
-    {
-        var obj = new GameObject(name);
-        obj.transform.SetParent(parent, false);
-        var t = obj.AddComponent<Text>();
-        t.text      = txt;
-        t.fontSize  = size;
-        t.color     = col;
-        t.font      = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        t.fontStyle = style;
-        t.alignment = TextAnchor.MiddleCenter;
-        var rt = t.GetComponent<RectTransform>();
-        rt.anchorMin = anchorMin; rt.anchorMax = anchorMax; rt.pivot = pivot;
-        rt.anchoredPosition = pos; rt.sizeDelta = sizeDelta;
-        return t;
-    }
-
-    static void MakeButton(Transform parent, string label, Vector2 pos,
-                           Vector2 size, UnityEngine.Events.UnityAction action)
-    {
-        var obj = new GameObject("RestartButton");
-        obj.transform.SetParent(parent, false);
-        obj.AddComponent<Image>().color = new Color(0.2f, 0.65f, 0.25f);
-        obj.AddComponent<Button>().onClick.AddListener(action);
-        var rt = obj.GetComponent<RectTransform>();
-        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.anchoredPosition = pos; rt.sizeDelta = size;
-
-        var tObj = new GameObject("Text");
-        tObj.transform.SetParent(obj.transform, false);
-        var t = tObj.AddComponent<Text>();
-        t.text      = label; t.fontSize = 52; t.color = Color.white;
-        t.font      = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        t.fontStyle = FontStyle.Bold;
-        t.alignment = TextAnchor.MiddleCenter;
-        var tRt = t.GetComponent<RectTransform>();
-        tRt.anchorMin = Vector2.zero; tRt.anchorMax = Vector2.one;
-        tRt.sizeDelta = Vector2.zero; tRt.anchoredPosition = Vector2.zero;
-    }
-
     // ─── Public API ──────────────────────────────────────────────────────────
 
     public void AddScore(int pts)
@@ -189,7 +100,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void RestartGame() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    public void RestartGame() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     public bool IsGameOver => isGameOver;
 }

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 과일 떨어뜨리기·머지 과일 생성을 담당.
-/// 씬에 배치된 FruitSpawner GameObject의 Transform 위치(SpawnerY)를 기준으로 동작.
+/// NEXT 미리보기 Image는 씬에 미리 배치하고 SerializeField로 참조.
 /// </summary>
 public class FruitSpawner : MonoBehaviour
 {
@@ -19,15 +19,17 @@ public class FruitSpawner : MonoBehaviour
     private float coolTimer = 0f;
 
     private GameObject dropLine;
-    private Image      nextPreviewImage;
     private static Sprite sharedPreviewSprite;
+
+    // ─── 씬 UI 참조 (Inspector에서 연결) ────────────────────────────────────
+    [SerializeField] private Image nextPreviewImage;
 
     // ─── 초기화 ──────────────────────────────────────────────────────────────
 
     void Start()
     {
         CreateDropLine();
-        CreateNextPreview();
+        sharedPreviewSprite = BuildCircleSprite();
         nextIndex = RandomIndex();
         PrepareNextFruit();
     }
@@ -122,64 +124,15 @@ public class FruitSpawner : MonoBehaviour
         dropLine.transform.localScale = new Vector3(0.06f, h, 1f);
     }
 
-    // ─── 다음 과일 미리보기 (Canvas UI 패널) ─────────────────────────────────
-
-    void CreateNextPreview()
-    {
-        sharedPreviewSprite = BuildCircleSprite();
-
-        // Canvas
-        var cv = new GameObject("NextPreviewCanvas");
-        var canvas = cv.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 10;
-        var scaler = cv.AddComponent<CanvasScaler>();
-        scaler.uiScaleMode         = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1080, 1920);
-        cv.AddComponent<GraphicRaycaster>();
-
-        // 패널 배경 (갈색 박스)
-        var panel = new GameObject("NextPanel");
-        panel.transform.SetParent(cv.transform, false);
-        var panelImg = panel.AddComponent<Image>();
-        panelImg.color = new Color(0.55f, 0.38f, 0.22f, 0.95f);
-        var panelRt = panel.GetComponent<RectTransform>();
-        panelRt.anchorMin = panelRt.anchorMax = panelRt.pivot = new Vector2(1f, 1f);
-        panelRt.anchoredPosition = new Vector2(-30f, -30f);
-        panelRt.sizeDelta        = new Vector2(210f, 260f);
-
-        // "NEXT" 라벨
-        var lObj = new GameObject("NextLabel");
-        lObj.transform.SetParent(panel.transform, false);
-        var lTxt = lObj.AddComponent<Text>();
-        lTxt.text      = "NEXT";
-        lTxt.fontSize  = 48;
-        lTxt.color     = Color.white;
-        lTxt.font      = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        lTxt.fontStyle = FontStyle.Bold;
-        lTxt.alignment = TextAnchor.MiddleCenter;
-        var lRt = lTxt.GetComponent<RectTransform>();
-        lRt.anchorMin = new Vector2(0f, 1f); lRt.anchorMax = new Vector2(1f, 1f);
-        lRt.pivot     = new Vector2(0.5f, 1f);
-        lRt.anchoredPosition = new Vector2(0f, -8f);
-        lRt.sizeDelta        = new Vector2(0f, 65f);
-
-        // 과일 아이콘
-        var iObj = new GameObject("NextFruitIcon");
-        iObj.transform.SetParent(panel.transform, false);
-        nextPreviewImage = iObj.AddComponent<Image>();
-        nextPreviewImage.sprite = sharedPreviewSprite;
-        var iRt = iObj.GetComponent<RectTransform>();
-        iRt.anchorMin = iRt.anchorMax = iRt.pivot = new Vector2(0.5f, 0.5f);
-        iRt.anchoredPosition = new Vector2(0f, -30f);
-        iRt.sizeDelta        = new Vector2(140f, 140f);
-    }
+    // ─── 다음 과일 미리보기 ──────────────────────────────────────────────────
 
     void UpdateNextPreview()
     {
         if (nextPreviewImage == null) return;
         float r     = Fruit.Radii[nextIndex];
-        float scale = Mathf.Lerp(0.35f, 1f, (r - Fruit.Radii[0]) / (Fruit.Radii[Fruit.Radii.Length - 1] - Fruit.Radii[0]));
+        float scale = Mathf.Lerp(0.35f, 1f,
+            (r - Fruit.Radii[0]) / (Fruit.Radii[Fruit.Radii.Length - 1] - Fruit.Radii[0]));
+        nextPreviewImage.sprite   = sharedPreviewSprite;
         nextPreviewImage.color    = Fruit.Colors[nextIndex];
         nextPreviewImage.rectTransform.sizeDelta = Vector2.one * 140f * scale;
     }
