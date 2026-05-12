@@ -57,7 +57,7 @@ public class FruitSpawner : MonoBehaviour
         {
             float mx    = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
             float r     = Fruit.Radii[currentIndex];
-            float clamp = Mathf.Clamp(mx, -GameManager.WallX + r, GameManager.WallX - r);
+            float clamp = Mathf.Clamp(mx, -GameManager.Instance.WallX + r, GameManager.Instance.WallX - r);
             heldFruit.transform.position = new Vector3(clamp, transform.position.y, 0);
             UpdateDropLine(clamp);
         }
@@ -118,8 +118,8 @@ public class FruitSpawner : MonoBehaviour
     {
         if (dropLine == null) return;
         dropLine.SetActive(true);
-        float h  = transform.position.y - GameManager.FloorY;
-        float cy = GameManager.FloorY + h * 0.5f;
+        float h  = transform.position.y - GameManager.Instance.FloorY;
+        float cy = GameManager.Instance.FloorY + h * 0.5f;
         dropLine.transform.position   = new Vector3(x, cy, 0);
         dropLine.transform.localScale = new Vector3(0.06f, h, 1f);
     }

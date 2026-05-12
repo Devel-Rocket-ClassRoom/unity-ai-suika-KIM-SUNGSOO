@@ -10,11 +10,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    // ─── 게임 월드 상수 ──────────────────────────────────────────────────────
-    public const float WallX          = 4.5f;
-    public const float FloorY         = -9f;
-    public const float GameOverLineY  = 6.5f;
-    public const float SpawnerY       = 8.5f;
+    // ─── 게임 월드 크기 (Inspector에서 조정 가능) ────────────────────────────
+    [SerializeField] private float wallX         = 4.5f;
+    [SerializeField] private float floorY        = -9f;
+    [SerializeField] private float gameOverLineY = 6.5f;
+    [SerializeField] private float spawnerY      = 8.5f;
+
+    public float WallX         => wallX;
+    public float FloorY        => floorY;
+    public float GameOverLineY => gameOverLineY;
+    public float SpawnerY      => spawnerY;
 
     // ─── 씬 UI 참조 (Inspector에서 연결) ────────────────────────────────────
     [SerializeField] private Text       scoreText;
@@ -35,10 +40,54 @@ public class GameManager : MonoBehaviour
 
         Physics2D.gravity = new Vector2(0f, -18f);
 
+        ApplyLayout();
         ApplyVisuals();
         spawner = FindFirstObjectByType<FruitSpawner>();
 
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
+    }
+
+    // ─── 환경 오브젝트 레이아웃 ─────────────────────────────────────────────
+
+    void ApplyLayout()
+    {
+        float wallThick = 0.5f;
+        float wallHalf  = wallThick * 0.5f;
+
+        SetTransform("Background",
+            new Vector3(0, (floorY + gameOverLineY) * 0.5f, 0),
+            new Vector3(wallX * 2f, gameOverLineY - floorY, 1f));
+
+        SetTransform("Floor",
+            new Vector3(0, floorY - wallHalf, 0),
+            new Vector3(wallX * 2f + wallThick * 2f, wallThick, 1f));
+
+        SetTransform("LeftWall",
+            new Vector3(-(wallX + wallHalf), 0, 0),
+            new Vector3(wallThick, 40f, 1f));
+
+        SetTransform("RightWall",
+            new Vector3(wallX + wallHalf, 0, 0),
+            new Vector3(wallThick, 40f, 1f));
+
+        SetTransform("GameOverLine",
+            new Vector3(0, gameOverLineY, 0),
+            new Vector3(wallX * 2f, 0.12f, 1f));
+
+        SetTransform("GameOverZone",
+            new Vector3(0, gameOverLineY + 1f, 0),
+            new Vector3(wallX * 2f, 2f, 1f));
+
+        var sp = GameObject.Find("FruitSpawner");
+        if (sp != null) sp.transform.position = new Vector3(0, spawnerY, 0);
+    }
+
+    static void SetTransform(string goName, Vector3 pos, Vector3 scale)
+    {
+        var obj = GameObject.Find(goName);
+        if (obj == null) return;
+        obj.transform.position   = pos;
+        obj.transform.localScale = scale;
     }
 
     // ─── 환경 오브젝트 시각화 ────────────────────────────────────────────────
