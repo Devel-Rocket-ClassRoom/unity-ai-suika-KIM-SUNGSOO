@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 과일 떨어뜨리기·머지 과일 생성을 담당.
@@ -17,9 +18,9 @@ public class FruitSpawner : MonoBehaviour
     private float cooldown  = 0.6f;
     private float coolTimer = 0f;
 
-    private GameObject   dropLine;
-    private SpriteRenderer nextPreviewSr;
-    private static Sprite  sharedPreviewSprite;
+    private GameObject dropLine;
+    private Image      nextPreviewImage;
+    private static Sprite sharedPreviewSprite;
 
     // ─── 초기화 ──────────────────────────────────────────────────────────────
 
@@ -121,26 +122,66 @@ public class FruitSpawner : MonoBehaviour
         dropLine.transform.localScale = new Vector3(0.06f, h, 1f);
     }
 
-    // ─── 다음 과일 미리보기 ──────────────────────────────────────────────────
+    // ─── 다음 과일 미리보기 (Canvas UI 패널) ─────────────────────────────────
 
     void CreateNextPreview()
     {
-        // 컨테이너 오른쪽 벽 바깥, 세로 중간 부근에 소형 원으로 표시
-        var obj = new GameObject("NextFruitPreview");
-        obj.transform.position = new Vector3(GameManager.WallX + 0.65f,
-                                             GameManager.GameOverLineY + 0.7f, 0);
-        nextPreviewSr = obj.AddComponent<SpriteRenderer>();
-        nextPreviewSr.sortingOrder = 5;
         sharedPreviewSprite = BuildCircleSprite();
+
+        // Canvas
+        var cv = new GameObject("NextPreviewCanvas");
+        var canvas = cv.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 10;
+        var scaler = cv.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode         = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1080, 1920);
+        cv.AddComponent<GraphicRaycaster>();
+
+        // 패널 배경 (갈색 박스)
+        var panel = new GameObject("NextPanel");
+        panel.transform.SetParent(cv.transform, false);
+        var panelImg = panel.AddComponent<Image>();
+        panelImg.color = new Color(0.55f, 0.38f, 0.22f, 0.95f);
+        var panelRt = panel.GetComponent<RectTransform>();
+        panelRt.anchorMin = panelRt.anchorMax = panelRt.pivot = new Vector2(1f, 1f);
+        panelRt.anchoredPosition = new Vector2(-30f, -30f);
+        panelRt.sizeDelta        = new Vector2(210f, 260f);
+
+        // "NEXT" 라벨
+        var lObj = new GameObject("NextLabel");
+        lObj.transform.SetParent(panel.transform, false);
+        var lTxt = lObj.AddComponent<Text>();
+        lTxt.text      = "NEXT";
+        lTxt.fontSize  = 48;
+        lTxt.color     = Color.white;
+        lTxt.font      = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        lTxt.fontStyle = FontStyle.Bold;
+        lTxt.alignment = TextAnchor.MiddleCenter;
+        var lRt = lTxt.GetComponent<RectTransform>();
+        lRt.anchorMin = new Vector2(0f, 1f); lRt.anchorMax = new Vector2(1f, 1f);
+        lRt.pivot     = new Vector2(0.5f, 1f);
+        lRt.anchoredPosition = new Vector2(0f, -8f);
+        lRt.sizeDelta        = new Vector2(0f, 65f);
+
+        // 과일 아이콘
+        var iObj = new GameObject("NextFruitIcon");
+        iObj.transform.SetParent(panel.transform, false);
+        nextPreviewImage = iObj.AddComponent<Image>();
+        nextPreviewImage.sprite = sharedPreviewSprite;
+        var iRt = iObj.GetComponent<RectTransform>();
+        iRt.anchorMin = iRt.anchorMax = iRt.pivot = new Vector2(0.5f, 0.5f);
+        iRt.anchoredPosition = new Vector2(0f, -30f);
+        iRt.sizeDelta        = new Vector2(140f, 140f);
     }
 
     void UpdateNextPreview()
     {
-        if (nextPreviewSr == null) return;
-        float r = Fruit.Radii[nextIndex];
-        nextPreviewSr.sprite = sharedPreviewSprite;
-        nextPreviewSr.color  = Fruit.Colors[nextIndex];
-        nextPreviewSr.transform.localScale = Vector3.one * r * 2f * 0.55f;
+        if (nextPreviewImage == null) return;
+        float r     = Fruit.Radii[nextIndex];
+        float scale = Mathf.Lerp(0.35f, 1f, (r - Fruit.Radii[0]) / (Fruit.Radii[Fruit.Radii.Length - 1] - Fruit.Radii[0]));
+        nextPreviewImage.color    = Fruit.Colors[nextIndex];
+        nextPreviewImage.rectTransform.sizeDelta = Vector2.one * 140f * scale;
     }
 
     static Sprite BuildCircleSprite()
