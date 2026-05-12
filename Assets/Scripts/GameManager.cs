@@ -54,7 +54,8 @@ public class GameManager : MonoBehaviour
     {
         var obj = GameObject.Find(goName);
         if (obj == null) return;
-        var sr = obj.GetComponent<SpriteRenderer>() ?? obj.AddComponent<SpriteRenderer>();
+        var sr = obj.GetComponent<SpriteRenderer>();
+        if (sr == null) sr = obj.AddComponent<SpriteRenderer>();
         sr.sprite = spr;
         sr.color  = col;
         sr.sortingOrder = order;
