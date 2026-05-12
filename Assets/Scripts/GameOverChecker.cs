@@ -5,7 +5,7 @@ using UnityEngine;
 // Triggers game over when a settled fruit stays inside for STAY_SECONDS.
 public class GameOverChecker : MonoBehaviour
 {
-    private const float StaySeconds     = 3f;
+    private const float StaySeconds     = 5f;
     private const float VelocitySettle  = 1.5f; // units/s — below this counts as "settled"
 
     // Key: instance ID, Value: accumulated settled-time
