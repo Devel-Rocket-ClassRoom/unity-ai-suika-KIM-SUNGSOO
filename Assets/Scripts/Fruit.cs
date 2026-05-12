@@ -40,17 +40,13 @@ public class Fruit : MonoBehaviour
 
     // ─── Components ─────────────────────────────────────────────────────────
 
-    private Rigidbody2D   rb;
+    private Rigidbody2D      rb;
     private CircleCollider2D cc;
-    private SpriteRenderer   sr;
-
-    private static Sprite sharedCircleSprite;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<CircleCollider2D>();
-        sr = GetComponent<SpriteRenderer>();
     }
 
     // ─── Init / Drop ────────────────────────────────────────────────────────
@@ -60,18 +56,13 @@ public class Fruit : MonoBehaviour
         fruitIndex = index;
         float r = Radii[index];
 
-        // Scale object so local-space radius 0.5 == world-space r
         transform.localScale = Vector3.one * (r * 2f);
         cc.radius = 0.5f;
 
-        sr.sprite = GetCircleSprite();
-        sr.color  = Colors[index];
-        sr.sortingOrder = 1;
-
-        rb.bodyType      = RigidbodyType2D.Kinematic;
-        rb.gravityScale  = 1f;
-        rb.mass          = r * r * 2f;
-        rb.linearDamping = 0.2f;
+        rb.bodyType       = RigidbodyType2D.Kinematic;
+        rb.gravityScale   = 1f;
+        rb.mass           = r * r * 2f;
+        rb.linearDamping  = 0.2f;
         rb.angularDamping = 1.0f;
     }
 
@@ -106,33 +97,4 @@ public class Fruit : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // ─── Circle sprite ──────────────────────────────────────────────────────
-
-    static Sprite GetCircleSprite()
-    {
-        if (sharedCircleSprite != null) return sharedCircleSprite;
-
-        const int size = 128;
-        float center = size * 0.5f;
-        float radius = center - 1f;
-
-        var tex    = new Texture2D(size, size, TextureFormat.RGBA32, false);
-        var pixels = new Color[size * size];
-
-        for (int y = 0; y < size; y++)
-        for (int x = 0; x < size; x++)
-        {
-            float dist  = Mathf.Sqrt((x - center) * (x - center) + (y - center) * (y - center));
-            float alpha = Mathf.Clamp01(radius - dist + 0.5f);
-            pixels[y * size + x] = new Color(1f, 1f, 1f, alpha);
-        }
-
-        tex.SetPixels(pixels);
-        tex.Apply();
-
-        sharedCircleSprite = Sprite.Create(tex, new Rect(0, 0, size, size),
-                                           new Vector2(0.5f, 0.5f), size);
-        sharedCircleSprite.name = "CircleSprite";
-        return sharedCircleSprite;
-    }
 }

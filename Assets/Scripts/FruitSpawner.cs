@@ -19,17 +19,16 @@ public class FruitSpawner : MonoBehaviour
     private float coolTimer = 0f;
 
     private GameObject dropLine;
-    private static Sprite sharedPreviewSprite;
 
-    // ─── 씬 UI 참조 (Inspector에서 연결) ────────────────────────────────────
-    [SerializeField] private Image nextPreviewImage;
+    // ─── Inspector 참조 ──────────────────────────────────────────────────────
+    [SerializeField] private GameObject[] fruitPrefabs;   // 0=Cherry … 10=Watermelon
+    [SerializeField] private Image        nextPreviewImage;
 
     // ─── 초기화 ──────────────────────────────────────────────────────────────
 
     void Start()
     {
         CreateDropLine();
-        sharedPreviewSprite = BuildCircleSprite();
         nextIndex = RandomIndex();
         PrepareNextFruit();
     }
@@ -88,11 +87,15 @@ public class FruitSpawner : MonoBehaviour
     public void SpawnMergedFruit(int index, Vector2 position)
         => SpawnFruit(index, position, kinematic: false);
 
-    static Fruit SpawnFruit(int index, Vector2 pos, bool kinematic)
+    Fruit SpawnFruit(int index, Vector2 pos, bool kinematic)
     {
-        var obj   = new GameObject(Fruit.Names[index]);
-        obj.transform.position = pos;
-        var fruit = obj.AddComponent<Fruit>();
+        if (fruitPrefabs == null || index >= fruitPrefabs.Length || fruitPrefabs[index] == null)
+        {
+            Debug.LogError($"[FruitSpawner] fruitPrefabs[{index}] ({Fruit.Names[index]}) 가 할당되지 않았습니다.");
+            return null;
+        }
+        var obj   = Instantiate(fruitPrefabs[index], pos, Quaternion.identity);
+        var fruit = obj.GetComponent<Fruit>();
         fruit.Initialize(index);
         if (!kinematic) fruit.Drop();
         return fruit;
@@ -129,29 +132,16 @@ public class FruitSpawner : MonoBehaviour
     void UpdateNextPreview()
     {
         if (nextPreviewImage == null) return;
+        if (fruitPrefabs == null || nextIndex >= fruitPrefabs.Length || fruitPrefabs[nextIndex] == null) return;
+
         float r     = Fruit.Radii[nextIndex];
         float scale = Mathf.Lerp(0.35f, 1f,
             (r - Fruit.Radii[0]) / (Fruit.Radii[Fruit.Radii.Length - 1] - Fruit.Radii[0]));
-        nextPreviewImage.sprite   = sharedPreviewSprite;
-        nextPreviewImage.color    = Fruit.Colors[nextIndex];
-        nextPreviewImage.rectTransform.sizeDelta = Vector2.one * 140f * scale;
-    }
 
-    static Sprite BuildCircleSprite()
-    {
-        const int size = 64;
-        float c = size * 0.5f, rad = c - 1f;
-        var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
-        var px  = new Color[size * size];
-        for (int y = 0; y < size; y++)
-        for (int x = 0; x < size; x++)
-        {
-            float d = Mathf.Sqrt((x - c) * (x - c) + (y - c) * (y - c));
-            px[y * size + x] = new Color(1, 1, 1, Mathf.Clamp01(rad - d + 0.5f));
-        }
-        tex.SetPixels(px);
-        tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
+        var sr = fruitPrefabs[nextIndex].GetComponent<SpriteRenderer>();
+        nextPreviewImage.sprite  = sr != null ? sr.sprite : null;
+        nextPreviewImage.color   = Color.white;
+        nextPreviewImage.rectTransform.sizeDelta = Vector2.one * 140f * scale;
     }
 
     // ─── 비활성화 처리 ───────────────────────────────────────────────────────
