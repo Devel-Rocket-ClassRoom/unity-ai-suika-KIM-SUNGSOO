@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\\\\.claude\\\\worktrees\\\\nifty-engelbart-7c74b2\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(find \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\" -maxdepth 3 -type d -name \"Assets\" 2>/dev/null | head -20)",
+      "Bash(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\\\\Assets\\\\Scripts\")",
+      "Bash(Out-Null)",
+      "Bash(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\\\\Assets\\\\Scenes\")",
+      "Bash(Write-Host \"Directories created\")",
+      "Bash(gh pr create --title '[미션 1] 수박게임 메인 메커닉 구현 \\(구성부분\\)' --base main --head '1-WatermelonGame-\\(구성부분\\)' --body ' *)",
+      "Bash(gh api *)",
+      "Bash(gh pr *)"
+    ]
+  }
+}

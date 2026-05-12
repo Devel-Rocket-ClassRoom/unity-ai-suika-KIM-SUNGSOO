@@ -1,24 +1,80 @@
-# Unity generated
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-[Uu]ser[Ss]ettings/
+# This .gitignore file should be placed at the root of your Unity project directory
+#
+# Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
+#
+.utmp/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+*.log
 
-# Visual Studio / Rider
+*.blend1
+*.blend1.meta
+
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+/[Aa]ssets/Plugins/Editor/JetBrains*
+*.DotSettings.user
+
 .vs/
-.idea/
+.vscode/
+.gradle/
+
+ExportedObj/
+.consulo/
 *.csproj
+*.unityproj
 *.sln
+*.slnx
 *.suo
+*.tmp
 *.user
 *.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
 
-# OS
-.DS_Store
-Thumbs.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+sysinfo.txt
+mono_crash.*
+
+*.apk
+*.aab
+*.unitypackage
+*.unitypackage.meta
+*.app
+
+crashlytics-build.properties
+
+InitTestScene*.unity*
+
+/ServerData
+/[Aa]ssets/StreamingAssets/aa*
+/[Aa]ssets/AddressableAssetsData/link.xml*
+/[Aa]ssets/Addressables_Temp*
+/[Aa]ssets/AddressableAssetsData/*/*.bin*
+
+/[Aa]ssets/Unity.VisualScripting.Generated/
+/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+/[Aa]ssets/[Ss]ceneDependencyCache*
+
+Assets/Imported/
+Assets/Scenes/TestScene-ymj.unity
+Assets/Scenes/TestScene-ymj.unity.meta
+Assets/TestPrefabs-ymj/
+Assets/TestPrefabs-ymj.meta
 
 # Claude Code worktrees (managed by tool)
 .claude/worktrees/
