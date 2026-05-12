@@ -933,7 +933,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
---- !u!222 &920004
+--- !u!225 &920004
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -951,6 +951,7 @@ GameObject:
   m_Component:
   - component: {fileID: 930002}
   - component: {fileID: 930003}
+  - component: {fileID: 930004}
   m_Layer: 5
   m_Name: GameOverPanel
   m_TagString: Untagged
@@ -1010,6 +1011,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &930004
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930001}
+  m_CullTransparentMesh: 1
 --- !u!1 &931001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,7 +1090,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: GAME OVER
---- !u!222 &931004
+--- !u!225 &931004
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1160,7 +1169,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
---- !u!222 &932004
+--- !u!225 &932004
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1179,6 +1188,7 @@ GameObject:
   - component: {fileID: 933002}
   - component: {fileID: 933003}
   - component: {fileID: 933004}
+  - component: {fileID: 933005}
   m_Layer: 5
   m_Name: RestartButton
   m_TagString: Untagged
@@ -1292,6 +1302,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &933005
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933001}
+  m_CullTransparentMesh: 1
 --- !u!1 &934001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1363,7 +1381,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uB2E4\uC2DC \uC2DC\uC791"
---- !u!222 &934004
+--- !u!225 &934004
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1381,6 +1399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 940002}
   - component: {fileID: 940003}
+  - component: {fileID: 940004}
   m_Layer: 5
   m_Name: NextPanel
   m_TagString: Untagged
@@ -1439,6 +1458,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &940004
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940001}
+  m_CullTransparentMesh: 1
 --- !u!1 &941001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1510,7 +1537,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: NEXT
---- !u!222 &941004
+--- !u!225 &941004
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1528,6 +1555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 942002}
   - component: {fileID: 942003}
+  - component: {fileID: 942004}
   m_Layer: 5
   m_Name: NextFruitIcon
   m_TagString: Untagged
@@ -1584,6 +1612,14 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &942004
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942001}
+  m_CullTransparentMesh: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
