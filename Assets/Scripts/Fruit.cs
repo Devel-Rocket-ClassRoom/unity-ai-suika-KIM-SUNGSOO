@@ -54,15 +54,24 @@ public class Fruit : MonoBehaviour
     public void Initialize(int index)
     {
         fruitIndex = index;
+
         float r = Radii[index];
 
-        transform.localScale = Vector3.one * (r * 2f);
         cc.radius = 0.5f;
 
-        rb.bodyType       = RigidbodyType2D.Kinematic;
-        rb.gravityScale   = 1f;
-        rb.mass           = r * r * 2f;
-        rb.linearDamping  = 0.2f;
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        float targetDiameter = r * 2f;
+        float spriteDiameter = sr.sprite.bounds.size.x;
+
+        float scale = targetDiameter / spriteDiameter;
+
+        transform.localScale = Vector3.one * scale;
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.gravityScale = 1f;
+        rb.mass = r * r * 2f;
+        rb.linearDamping = 0.2f;
         rb.angularDamping = 1.0f;
     }
 

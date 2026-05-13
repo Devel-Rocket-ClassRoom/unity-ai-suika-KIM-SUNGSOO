@@ -13,7 +13,12 @@
       "Bash(gh pr *)",
       "Bash(ls /c/Users/kimseongsoo/ 2>&1)",
       "mcp__GitHub__issue_read",
-      "mcp__GitHub__create_pull_request"
+      "mcp__GitHub__create_pull_request",
+      "Bash(Get-Content \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\\\\Assets\\\\Scripts\\\\GameManager.cs.meta\")",
+      "Bash(Select-String \"guid\")",
+      "Bash(Get-Content \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\\\\Assets\\\\Scripts\\\\Fruit.cs.meta\")",
+      "Bash(Get-Content \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\\\\Assets\\\\Scripts\\\\FruitSpawner.cs.meta\")",
+      "Bash(Get-Content \"C:\\\\Users\\\\kimseongsoo\\\\unity-ai-suika-KIM-SUNGSOO\\\\Assets\\\\Scripts\\\\GameOverChecker.cs.meta\")"
     ]
   }
 }
